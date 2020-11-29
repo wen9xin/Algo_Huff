@@ -5,6 +5,7 @@
 #include "huffman_code.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct {
         int tab[256];
@@ -40,54 +41,78 @@ void ConstruireTableOcc(FILE *fichier, TableOcc_t *TableOcc) {
 }
 
 fap InitHuffman(TableOcc_t *TableOcc) {
-    int i;
-    Arbre z;
-    fap F = creer_fap_vide();
+        int i;
+        Arbre z;
+        fap F = creer_fap_vide();
 
-    for(i=0; i<256; i++){
-        z = NouveauNoeud(ArbreVide(), i, ArbreVide());
-        F = inserer(F, z, TableOcc->tab[i]);
-    }
-    printf("Programme non realise (InitHuffman)\n");
-    return F;
+        for(i=0; i<256; i++) {
+                z = NouveauNoeud(ArbreVide(), i, ArbreVide());
+                F = inserer(F, z, TableOcc->tab[i]);
+        }
+        printf("Programme realise (InitHuffman)\n");
+        return F;
 
-    //return NULL;
+        //return NULL;
 }
 
 Arbre ConstruireArbre(fap file) {
-    int i;
-    int p1 = 0, p2 = 0;
-    int xp = 0, yp = 0;
-    Arbre x, y, z;
-    Arbre a, b;
+        int i;
+        int p1 = 0, p2 = 0;
+        int xp = 0, yp = 0;
+        Arbre x, y, z;
+        Arbre a, b;
 
-    for (i = 0; i < 254; i++){
+        for (i = 0; i < 254; i++) {
 
-        x = NouveauNoeud(ArbreVide(), 0, ArbreVide());
-        y = NouveauNoeud(ArbreVide(), 0, ArbreVide());
-        z = NouveauNoeud(ArbreVide(), 0, ArbreVide());
+                x = NouveauNoeud(ArbreVide(), 0, ArbreVide());
+                y = NouveauNoeud(ArbreVide(), 0, ArbreVide());
+                z = NouveauNoeud(ArbreVide(), 0, ArbreVide());
 
-        x = file->element; xp = file->priorite;
-        file = extraire(file, &a, &p1);
-        y = file->element; yp = file->priorite;
-        file = extraire(file, &b, &p2);
-        z = NouveauNoeud(x, Etiq(z), y);
-        inserer(file, z, (xp + yp));
-    }
-    return z;
+                x = file->element; xp = file->priorite;
+                file = extraire(file, &a, &p1);
+                y = file->element; yp = file->priorite;
+                file = extraire(file, &b, &p2);
+                z = NouveauNoeud(x, Etiq(z), y);
+                inserer(file, z, (xp + yp));
+        }
+        return z;
 }
 
 void ConstruireCode(Arbre huff) {
-        /* A COMPLETER */
-
-
+        int lg=0;
+        int cd[255];
+            InitTableHuff(huff,cd,lg);
         printf("Programme non realise (ConstruireCode)\n");
 }
+
+void InitTableHuff(Arbre huff,int cd[],int lg){
+        if(FilsGauche(huff)!=NULL||FilsDroit(huff)!=NULL) {
+                if(FilsGauche(huff)!=NULL) {
+                        cd[lg]=0;
+                        lg=lg+1;
+                        InitTableHuff(FilsGauche(huff),cd,lg);
+                }
+                if(FilsDroit(huff)!=NULL) {
+                        cd[lg]=1;
+                        lg=lg+1;
+                        InitTableHuff(FilsDroit(huff),cd,lg);
+                }
+        }else{
+                HuffmanCode[Etiq(huff)].lg=lg;
+                printf("HuffmanCode[%d]:lg=%d,Code:",Etiq(huff),lg);
+                for(int i=0;i<lg;i++){
+                  HuffmanCode[Etiq(huff)].code[i]=cd[i];
+                  printf("%d",cd[i] );
+                }
+                printf("\n");
+        }
+}
+
 
 void Encoder(FILE *fic_in, FILE *fic_out, Arbre ArbreHuffman) {
         /* A COMPLETER */
 
-        printf("Programme non realise (Encoder)\n");
+        printf("Programme realise (Encoder)\n");
 }
 
 int main(int argc, char *argv[]) {

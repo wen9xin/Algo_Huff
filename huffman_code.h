@@ -6,6 +6,7 @@ struct code_char {
     int code[256]; /* ne contient que des 0 ou des 1 */
 };
 
-int getLength(fap file);
+void InitTableHuff(Arbre huff,int cd[],int lg);
+
 
 #endif
