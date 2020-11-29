@@ -40,83 +40,42 @@ void ConstruireTableOcc(FILE *fichier, TableOcc_t *TableOcc) {
 }
 
 fap InitHuffman(TableOcc_t *TableOcc) {
-        /* A COMPLETER */
-        fap file=creer_fap_vide();
-        for(int i =0; i<256; i++) {
-                Arbre k;
-                k=NouveauNoeud(NULL,i,NULL);
-                //    k->etiq=i;
-                inserer(file,k,TableOcc->tab[i]);
-        }
-          printf("Programme realise (InitHuffman)\n");
-        return file;
-}
+    int i;
+    Arbre z;
+    fap F = creer_fap_vide();
 
-Arbre ConstruireArbre(fap file) {
-        Arbre x,y,z,res;
-        int xp,yp,zp,resp;
-        fap backup = file;
-        int len;
-        while(file->prochain != NULL){
-            file = file->prochain;
-            len++;
-        }
-        file = backup;
-        if(est_fap_vide(file)){
-          len = 0;
-        }
-      //      printf("Nombre total de caracteres differents : %d\n", len+1);
-        for(int i=1; i< len; i++) {
-                x=NouveauNoeud(ArbreVide(),0,ArbreVide());
-                y=NouveauNoeud(ArbreVide(),0,ArbreVide());
-                xp=0;yp=0;
-                file=extraire(file,&x,&xp);
-                file=extraire(file,&y,&yp);
-                z=NouveauNoeud(x,0,y);
-                zp=xp+yp;
-                file=inserer(file,z,zp);
-                printf("inserer (%d)\n", zp);
-        }
-      //  printf("(ConstruireArbre72)\n");
-         res = NouveauNoeud(NULL, 0, NULL);
-        resp = 0;
-        file = extraire(file, &res, &resp);
-        if(!est_fap_vide(file)){
-          printf("Erreur ConstruireArbre()\n");
-        }
-        else printf("ConstruireArbre() executed.\n");
-       printf("Programme realise (ConstruireArbre)\n");
-        return res;
-}
-/*
-
-Arbre ConstruireArbre(fap file) {
-    int length = getLength(file)-1;
-    printf("Nombre total de caracteres differents : %d\n", length+1);
-
-    for(int i=0; i<length; i++){
-        Arbre x = NouveauNoeud(NULL, 0, NULL);
-        int xPrio = 0;
-        Arbre y = NouveauNoeud(NULL, 0, NULL);
-        int yPrio = 0;
-        file = extraire(file, &x, &xPrio);
-        file = extraire(file, &y, &yPrio);
-        printf("x = %c, y = %c, xPrio = %d, yPrio = %d ; ", x->etiq, y->etiq, xPrio, yPrio);
-        Arbre z = NouveauNoeud(x, 0, y);
-        int zPrio = xPrio + yPrio;
-        file = inserer(file, z, zPrio);
-        printf("Inserted (%d)\n", zPrio);
+    for(i=0; i<256; i++){
+        z = NouveauNoeud(ArbreVide(), i, ArbreVide());
+        F = inserer(F, z, TableOcc->tab[i]);
     }
+    printf("Programme non realise (InitHuffman)\n");
+    return F;
 
-    Arbre res = NouveauNoeud(NULL, 0, NULL);
-    int resPrio = 0;
-    file = extraire(file, &res, &resPrio);
-    if(!est_fap_vide(file)) perror("Error Occured At ConstruireArbre()");
-    else printf("ConstruireArbre() executed.\n");
-
-    return res;
+    //return NULL;
 }
-*/
+
+Arbre ConstruireArbre(fap file) {
+    int i;
+    int p1 = 0, p2 = 0;
+    int xp = 0, yp = 0;
+    Arbre x, y, z;
+    Arbre a, b;
+
+    for (i = 0; i < 254; i++){
+
+        x = NouveauNoeud(ArbreVide(), 0, ArbreVide());
+        y = NouveauNoeud(ArbreVide(), 0, ArbreVide());
+        z = NouveauNoeud(ArbreVide(), 0, ArbreVide());
+
+        x = file->element; xp = file->priorite;
+        file = extraire(file, &a, &p1);
+        y = file->element; yp = file->priorite;
+        file = extraire(file, &b, &p2);
+        z = NouveauNoeud(x, Etiq(z), y);
+        inserer(file, z, (xp + yp));
+    }
+    return z;
+}
 
 void ConstruireCode(Arbre huff) {
         /* A COMPLETER */
